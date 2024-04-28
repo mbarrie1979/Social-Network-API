@@ -1,12 +1,13 @@
 const { Schema, model } = require('mongoose');
 
-// Schema to create User model
+// User model/schema
 const userSchema = new Schema(
     {
         userName: {
             type: String,
             required: true,
             maxlength: 50,
+            unique: true
         },
         email: {
             type: String,
@@ -16,6 +17,10 @@ const userSchema = new Schema(
         thoughts: [{
             type: Schema.Types.ObjectId,
             ref: 'Thought'
+        }],
+        reactions: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Reaction'
         }],
         friends: [{
             type: Schema.Types.ObjectId,
