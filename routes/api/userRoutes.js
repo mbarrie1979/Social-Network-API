@@ -12,7 +12,8 @@ const {
 router.route('/').get(getUsers)
 // router.route('/').get(getUsers).post(createUser);
 
-// /api/students/:studentId
+// /api/user/:userId
+router.route('/:userId').get(getSingleUser);
 // router.route('/:studentId').get(getSingleStudent).delete(deleteStudent);
 
 // /api/students/:studentId/assignments

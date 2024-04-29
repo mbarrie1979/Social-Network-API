@@ -17,25 +17,22 @@ module.exports = {
       return res.status(500).json(err);
     }
   },
-  // Get a single student
-  // async getSingleStudent(req, res) {
-  //   try {
-  //     const student = await Student.findOne({ _id: req.params.studentId })
-  //       .select('-__v');
+  // Get a single thought
+  async getSingleThought(req, res) {
+    try {
+      const thought = await Thought.findOne({ _id: req.params.thoughtId })
+        .select('-__v');
 
-  //     if (!student) {
-  //       return res.status(404).json({ message: 'No student with that ID' })
-  //     }
+      if (!thought) {
+        return res.status(404).json({ message: 'No thought with that ID' })
+      }
 
-  //     res.json({
-  //       student,
-  //       grade: await grade(req.params.studentId),
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //     return res.status(500).json(err);
-  //   }
-  // },
+      res.json(thought);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  },
   // create a new student
   // async createStudent(req, res) {
   //   try {
