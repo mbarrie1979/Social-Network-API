@@ -17,7 +17,7 @@ router.route('/:thoughtId').get(getSingleThought)
 // router.route('/:studentId').get(getSingleStudent).delete(deleteStudent);
 
 // /api/thought/:thoughtId/user/:userId
-router.route('/:thoughtId/user/:userId').delete(deleteThought);
+router.route('/:thoughtId').delete(deleteThought);
 
 // /api/students/:studentId/assignments/:assignmentId
 // router.route('/:studentId/assignments/:assignmentId').delete(removeAssignment);

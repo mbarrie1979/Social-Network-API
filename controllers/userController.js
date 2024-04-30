@@ -1,5 +1,5 @@
 // const { ObjectId } = require('mongoose').Types;
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 
 
@@ -49,52 +49,44 @@ module.exports = {
     const updateData = req.body;
 
     try {
-     
+
       const { thoughts, reactions, friends, ...safeUpdateData } = updateData;
-      
-    
+
+
       const updatedUser = await User.findByIdAndUpdate(userId, safeUpdateData, {
-          new: true, 
-          runValidators: true
+        new: true,
+        runValidators: true
       });
 
       if (!updatedUser) {
-          return res.status(404).json({ message: "User not found" });
+        return res.status(404).json({ message: "User not found" });
       }
 
       res.json(updatedUser);
-  } catch (error) {
+    } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Failed to update user', error: error });
-  }
+    }
   },
-  // Delete a student and remove them from the course
-  // async deleteStudent(req, res) {
-  //   try {
-  //     const student = await Student.findOneAndRemove({ _id: req.params.studentId });
+  // Delete a user and their thoughts
+  async deleteUser(req, res) {
+    const { userId } = req.params;
+    try {
 
-  //     if (!student) {
-  //       return res.status(404).json({ message: 'No such student exists' });
-  //     }
+      const user = await User.findOneAndRemove({ _id: userId });
 
-  //     const course = await Course.findOneAndUpdate(
-  //       { students: req.params.studentId },
-  //       { $pull: { students: req.params.studentId } },
-  //       { new: true }
-  //     );
+      if (!user) {
+        return res.status(404).json({ message: 'No such user exists' });
+      }
 
-  //     if (!course) {
-  //       return res.status(404).json({
-  //         message: 'Student deleted, but no courses found',
-  //       });
-  //     }
+      await Thought.deleteMany({ user: userId });
 
-  //     res.json({ message: 'Student successfully deleted' });
-  //   } catch (err) {
-  //     console.log(err);
-  //     res.status(500).json(err);
-  //   }
-  // },
+      res.json({ message: 'User and all associated thoughts successfully deleted' });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  }
 
   // Add an assignment to a student
   // async addAssignment(req, res) {
