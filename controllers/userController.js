@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongoose').Types;
+// const { ObjectId } = require('mongoose').Types;
 const { User } = require('../models');
 
 
@@ -41,6 +41,32 @@ module.exports = {
     } catch (err) {
       res.status(500).json(err);
     }
+  },
+  //update a user
+  async updateUser(req, res) {
+
+    const { userId } = req.params;
+    const updateData = req.body;
+
+    try {
+     
+      const { thoughts, reactions, friends, ...safeUpdateData } = updateData;
+      
+    
+      const updatedUser = await User.findByIdAndUpdate(userId, safeUpdateData, {
+          new: true, 
+          runValidators: true
+      });
+
+      if (!updatedUser) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json(updatedUser);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to update user', error: error });
+  }
   },
   // Delete a student and remove them from the course
   // async deleteStudent(req, res) {
