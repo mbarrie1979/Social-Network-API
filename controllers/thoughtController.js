@@ -57,7 +57,7 @@ module.exports = {
   // Delete a thought and remove it from the user
   async deleteThought(req, res) {
 
-    const { thoughtId, userId } = req.params;
+    const { thoughtId} = req.params;
 
     try {
       const thought = await Thought.findOneAndRemove({ _id: thoughtId });
@@ -67,7 +67,7 @@ module.exports = {
       }
 
       const user = await User.findOneAndUpdate(
-        { _id: userId },
+        { _id: thought.user },
         { $pull: { thoughts: thoughtId } },
         { new: true }
       );
