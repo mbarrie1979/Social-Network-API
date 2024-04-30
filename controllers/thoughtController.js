@@ -1,5 +1,5 @@
 // const { ObjectId } = require('mongoose').Types;
-const { Thought, User } = require('../models');
+const { Thought, User, reactionSchema } = require('../models');
 
 
 
@@ -57,7 +57,7 @@ module.exports = {
   // Delete a thought and remove it from the user
   async deleteThought(req, res) {
 
-    const { thoughtId} = req.params;
+    const { thoughtId } = req.params;
 
     try {
       const thought = await Thought.findOneAndRemove({ _id: thoughtId });
@@ -85,29 +85,40 @@ module.exports = {
     }
   },
 
-  // Add an assignment to a student
-  // async addAssignment(req, res) {
-  //   console.log('You are adding an assignment');
-  //   console.log(req.body);
+  // Add an reaction to a thought
+  async addReaction(req, res) {
+    const { thoughtId } = req.params
+    const { reaction, userName } = req.body;
+    try {
+      const thought = await Thought.findById(thoughtId);
+      if (!thought) {
+        return res.status(404).json({ message: 'Thought not found' });
+      }
 
-  //   try {
-  //     const student = await Student.findOneAndUpdate(
-  //       { _id: req.params.studentId },
-  //       { $addToSet: { assignments: req.body } },
-  //       { runValidators: true, new: true }
-  //     );
+      const user = await User.findOne({ userName: userName });
+      if (!user) {
+        return res.status(404).json({ message: 'User does not exist' });
+      }
 
-  //     if (!student) {
-  //       return res
-  //         .status(404)
-  //         .json({ message: 'No student found with that ID :(' });
-  //     }
+      const newReaction = {
+        reaction: reaction,
+        userName: userName,
+        createdAt: new Date()
+      };
 
-  //     res.json(student);
-  //   } catch (err) {
-  //     res.status(500).json(err);
-  //   }
-  // },
+
+      thought.reactions.push(newReaction);
+
+
+
+      await thought.save();
+
+      res.status(201).json(newReaction);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Failed to add reaction', error: err });
+    }
+  },
   // Remove assignment from a student
   //   async removeAssignment(req, res) {
   //     try {
