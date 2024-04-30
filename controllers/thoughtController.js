@@ -1,5 +1,5 @@
 // const { ObjectId } = require('mongoose').Types;
-const { Thought } = require('../models');
+const { Thought, User } = require('../models');
 
 
 
@@ -33,42 +33,57 @@ module.exports = {
       return res.status(500).json(err);
     }
   },
-  // create a new student
-  // async createStudent(req, res) {
-  //   try {
-  //     const student = await Student.create(req.body);
-  //     res.json(student);
-  //   } catch (err) {
-  //     res.status(500).json(err);
-  //   }
-  // },
-  // Delete a student and remove them from the course
-  // async deleteStudent(req, res) {
-  //   try {
-  //     const student = await Student.findOneAndRemove({ _id: req.params.studentId });
+  // create a new thought
+  async createThought(req, res) {
+    try {
+      const { thought, user } = req.body;
 
-  //     if (!student) {
-  //       return res.status(404).json({ message: 'No such student exists' });
-  //     }
 
-  //     const course = await Course.findOneAndUpdate(
-  //       { students: req.params.studentId },
-  //       { $pull: { students: req.params.studentId } },
-  //       { new: true }
-  //     );
+      const newThought = new Thought({
+        thought,
+        user
+      });
 
-  //     if (!course) {
-  //       return res.status(404).json({
-  //         message: 'Student deleted, but no courses found',
-  //       });
-  //     }
 
-  //     res.json({ message: 'Student successfully deleted' });
-  //   } catch (err) {
-  //     console.log(err);
-  //     res.status(500).json(err);
-  //   }
-  // },
+      await newThought.save();
+
+      await User.findByIdAndUpdate(user, { $push: { thoughts: newThought._id } });
+
+      res.status(201).send(newThought);
+    } catch (error) {
+      res.status(400).send(error);
+    }
+  },
+  // Delete a thought and remove it from the user
+  async deleteThought(req, res) {
+
+    const { thoughtId, userId } = req.params;
+
+    try {
+      const thought = await Thought.findOneAndRemove({ _id: thoughtId });
+
+      if (!thought) {
+        return res.status(404).json({ message: 'No such thought exists' });
+      }
+
+      const user = await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { thoughts: thoughtId } },
+        { new: true }
+      );
+
+      if (!user) {
+        return res.status(404).json({
+          message: 'thought deleted, but no user found',
+        });
+      }
+
+      res.json({ message: 'thought successfully deleted and user updated' });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
 
   // Add an assignment to a student
   // async addAssignment(req, res) {
