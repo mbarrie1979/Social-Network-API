@@ -8,7 +8,9 @@
     "start": "node index",
     "dev": "nodemon index",
     "seed": "node utils/seed",
-    "seedrun": "npm run seed && node server.js"
+    "seedrun": "npm run seed && node server.js",
+    "develop": "git push origin develop",
+    "gitall": "git add -A && git commit -m 'saved' && git push origin develop"
   },
   "dependencies": {
     "express": "^4.17.1",
