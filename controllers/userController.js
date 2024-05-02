@@ -117,10 +117,10 @@ module.exports = {
         { _id: friendId },
         { $addToSet: { friends: userId } },
         { runValidators: true, new: true }
-    );
-    if (!updatedFriend) {
+      );
+      if (!updatedFriend) {
         console.log("Failed to update friend's friend list");
-    }
+      }
 
       res.json(user);
     } catch (err) {
@@ -128,8 +128,8 @@ module.exports = {
     }
   },
   // Remove friend from a user
-    async deleteFriend(req, res) {
-      const { userId, friendId } = req.params;
+  async deleteFriend(req, res) {
+    const { userId, friendId } = req.params;
 
     try {
 
@@ -140,7 +140,7 @@ module.exports = {
           .status(404)
           .json({ message: 'No friend found with that ID :(' });
       }
-    
+
 
       const user = await User.findOneAndUpdate(
         { _id: userId },
@@ -159,15 +159,49 @@ module.exports = {
         { _id: friendId },
         { $pull: { friends: userId } },
         { runValidators: true, new: true }
-    );
-    if (!updatedFriend) {
+      );
+      if (!updatedFriend) {
         console.log("Failed to update friend's friend list");
-    }
+      }
 
       res.json(user);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
     }
-    },
+  },
+  // Add an reaction to a thought
+  async addReaction(req, res) {
+    const { thoughtId } = req.params
+    const { reaction, userName } = req.body;
+    try {
+      const thought = await Thought.findById(thoughtId);
+      if (!thought) {
+        return res.status(404).json({ message: 'Thought not found' });
+      }
+
+      const user = await User.findOne({ userName: userName });
+      if (!user) {
+        return res.status(404).json({ message: 'User does not exist' });
+      }
+
+      const newReaction = {
+        reaction: reaction,
+        userName: userName,
+        createdAt: new Date()
+      };
+
+
+      thought.reactions.push(newReaction);
+
+
+
+      await thought.save();
+
+      res.status(201).json(newReaction);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Failed to add reaction', error: err });
+    }
+  },
 };
