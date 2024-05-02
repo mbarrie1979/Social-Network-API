@@ -119,24 +119,34 @@ module.exports = {
       res.status(500).json({ message: 'Failed to add reaction', error: err });
     }
   },
-  // Remove assignment from a student
-  //   async removeAssignment(req, res) {
-  //     try {
-  //       const student = await Student.findOneAndUpdate(
-  //         { _id: req.params.studentId },
-  //         { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
-  //         { runValidators: true, new: true }
-  //       );
+  // Remove reaction from a thought
+  async deleteReaction(req, res) {
+    const { reactionId, thoughtId } = req.params;
 
-  //       if (!student) {
-  //         return res
-  //           .status(404)
-  //           .json({ message: 'No student found with that ID :(' });
-  //       }
+    try {
 
-  //       res.json(student);
-  //     } catch (err) {
-  //       res.status(500).json(err);
-  //     }
-  //   },
+      const thought = await Thought.findById(thoughtId)
+
+      if (!thought) {
+        return res
+          .status(404)
+          .json({ message: 'No thought found with that ID :(' });
+      }
+
+
+      const reaction = await Thought.findOneAndUpdate(
+        { _id: thoughtId },
+        { $pull: { reactions: { _id: reactionId } } },
+        { runValidators: true, new: true }
+      );
+      if (!reaction) {
+        console.log("Failed to update reaction list");
+      }
+
+      res.json(reaction);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
 };
