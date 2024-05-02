@@ -1,4 +1,3 @@
-// const { ObjectId } = require('mongoose').Types;
 const { Thought, User, reactionSchema } = require('../models');
 
 
@@ -26,6 +25,28 @@ module.exports = {
       if (!thought) {
         return res.status(404).json({ message: 'No thought with that ID' })
       }
+
+      res.json(thought);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  },
+  // Update a single thought
+  async updateThought(req, res) {
+
+    const { thoughtId } = req.params;
+    const updateData = req.body;
+
+    try {
+      const thought = await Thought.findOne({ _id: thoughtId })
+        .select('-__v');
+
+      if (!thought) {
+        return res.status(404).json({ message: 'No thought with that ID' })
+      }
+
+
 
       res.json(thought);
     } catch (err) {
