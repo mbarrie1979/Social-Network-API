@@ -10,7 +10,7 @@
     "seed": "node utils/seed",
     "seedrun": "npm run seed && node server.js",
     "develop": "git push origin develop",
-    "gitall": "git add -A && git commit -m 'saved' && git push origin develop"
+    "git_all": "git add -A && git commit -m 'saved' && git push origin develop"
   },
   "dependencies": {
     "express": "^4.17.1",

@@ -39,16 +39,21 @@ module.exports = {
     const updateData = req.body;
 
     try {
-      const thought = await Thought.findOne({ _id: thoughtId })
-        .select('-__v');
+      const { reactions, ...safeUpdateData } = updateData;
 
-      if (!thought) {
+
+      const updatedThought = await Thought.findByIdAndUpdate(thoughtId, safeUpdateData, {
+        new: true,
+        runValidators: true
+      });
+
+      if (!updatedThought) {
         return res.status(404).json({ message: 'No thought with that ID' })
       }
 
 
 
-      res.json(thought);
+      res.json(updatedThought);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -106,40 +111,7 @@ module.exports = {
     }
   },
 
-  // Add an reaction to a thought
-  async addReaction(req, res) {
-    const { thoughtId } = req.params
-    const { reaction, userName } = req.body;
-    try {
-      const thought = await Thought.findById(thoughtId);
-      if (!thought) {
-        return res.status(404).json({ message: 'Thought not found' });
-      }
-
-      const user = await User.findOne({ userName: userName });
-      if (!user) {
-        return res.status(404).json({ message: 'User does not exist' });
-      }
-
-      const newReaction = {
-        reaction: reaction,
-        userName: userName,
-        createdAt: new Date()
-      };
-
-
-      thought.reactions.push(newReaction);
-
-
-
-      await thought.save();
-
-      res.status(201).json(newReaction);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Failed to add reaction', error: err });
-    }
-  },
+  
   // Remove reaction from a thought
   async deleteReaction(req, res) {
     const { reactionId, thoughtId } = req.params;
