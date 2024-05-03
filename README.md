@@ -7,12 +7,11 @@ This project implements a RESTful API for a social network application where use
 ## Table of Contents
 
 - [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
 - [Demonstration](#demonstration)
 - [Contributing](#contributing)
-- [Tests](#tests)
-- [Questions](#questions)
+- [Screenshot](#screenshot)
+- [Contributions](#contributions)
+- [Credits](#credits)
 
 ## Installation
 
