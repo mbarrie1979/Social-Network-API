@@ -32,7 +32,7 @@ To start the server, run the following command:
 npm start
 
 
-## Demonstration/Walkthrough Video
+## Demonstration
 
 A walkthrough video demonstrating the functionality of the API and all the acceptance criteria is available [here](https://app.screencastify.com/v2/manage/videos/bNCoPSA6A31WLG17xBVS)
 .
