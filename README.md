@@ -34,7 +34,7 @@ npm start
 
 ## Demonstration
 
-A walkthrough video demonstrating the functionality of the API and all the acceptance criteria is available [here](https://app.screencastify.com/v2/manage/videos/bNCoPSA6A31WLG17xBVS)
+A walkthrough video demonstrating the functionality of the API and all the acceptance criteria is available [here](https://drive.google.com/file/d/1PDFTXab3I7-N_ABbE5RmJKUvGVTHyGtR/view)
 .
 
 
